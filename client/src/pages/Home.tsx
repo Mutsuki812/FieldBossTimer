@@ -9,6 +9,7 @@ import { formatTW, playReminderBeep } from "@/lib/time";
 import { CalendarDays, Clock, MapPin, Search } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const BOSSES = [
   { type: 'suspicious_ritual', name: '可疑的儀式', theme: 'boss-card-purple' },
@@ -76,6 +77,9 @@ export default function Home() {
     <div className="min-h-screen pb-20 selection:bg-primary/20">
       {/* Header Area */}
       <header className="pt-10 pb-6 px-4 max-w-7xl mx-auto">
+        <div className="flex justify-end mb-4">
+          <ThemeToggle />
+        </div>
         <div className="flex flex-col items-center justify-center mb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-sm font-medium mb-4">
             <Clock className="w-4 h-4" /> [台灣時間]
