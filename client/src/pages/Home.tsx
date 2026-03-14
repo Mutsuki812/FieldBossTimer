@@ -12,31 +12,19 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { Badge } from "@/components/ui/badge";
 
 // ============================================================
-// ★ 在這裡設定「即時回報系統」的開放時間段（台灣時間）
+// ★ 在這裡設定「即時回報系統」的開放時間段（台灣時間 - 指定特定日期）
 //
-// 格式說明：
-//   start / end 各自可填入以下欄位（均為台灣時間）：
-//     year   → 年（選填，不填代表每年）
-//     month  → 月 1~12（選填，不填代表每月）
-//     day    → 日（選填，不填代表每天）
-//     hour   → 時 0~23（必填）
-//     minute → 分 0~59（必填）
-//     second → 秒 0~59（選填，預設 0）
+// 格式說明：year, month, day, hour, minute, second 均為台灣時間
 //
-// 範例：
-//   ① 每天循環 19:30:00 ~ 23:59:59（不填年月日）
-//      start: { hour: 19, minute: 30 }
-//      end:   { hour: 23, minute: 59, second: 59 }
-//
-//   ② 指定特定日期 2026/3/20 20:00:00 ~ 2026/3/21 02:00:00
-//      start: { year: 2026, month: 3, day: 20, hour: 20, minute: 0 }
-//      end:   { year: 2026, month: 3, day: 21, hour:  2, minute: 0 }
+// 範例：2026/3/20 20:00:00 ~ 2026/3/21 02:00:00 開放即時回報
+//   { start: { year: 2026, month: 3, day: 20, hour: 20, minute: 0, second: 0 },
+//     end:   { year: 2026, month: 3, day: 21, hour:  2, minute: 0, second: 0 } }
 // ============================================================
 
 type WindowDT = {
-  year?: number;
-  month?: number;  // 1~12
-  day?: number;
+  year: number;
+  month: number;  // 1~12
+  day: number;
   hour: number;
   minute: number;
   second?: number;
@@ -45,33 +33,22 @@ type WindowDT = {
 type RealtimeWindow = { start: WindowDT; end: WindowDT };
 
 const REALTIME_WINDOWS: RealtimeWindow[] = [
-  // 每天循環：19:30:00 ~ 23:59:59
-  { start: { hour: 19, minute: 30, second: 0  },
-    end:   { hour: 23, minute: 59, second: 59 } },
-
-  // 每天循環：00:00:00 ~ 02:00:00（隔天凌晨）
-  { start: { hour:  0, minute:  0, second:  0 },
-    end:   { hour:  2, minute:  0, second:  0 } },
+  // 在這裡填入您的時間段設定
+  // { start: { year: 2026, month: 3, day: 20, hour: 20, minute: 0, second: 0 },
+  //   end:   { year: 2026, month: 3, day: 21, hour:  2, minute: 0, second: 0 } },
 ];
 // ============================================================
 
-function windowDTtoMs(dt: WindowDT, fallback: Date): number {
+function windowDTtoMs(dt: WindowDT): number {
   return new Date(
-    dt.year  ?? fallback.getFullYear(),
-    (dt.month ?? (fallback.getMonth() + 1)) - 1,
-    dt.day    ?? fallback.getDate(),
+    dt.year,
+    dt.month - 1,
+    dt.day,
     dt.hour,
     dt.minute,
     dt.second ?? 0,
     0
   ).getTime();
-}
-
-function hasDatePart(w: RealtimeWindow): boolean {
-  return (
-    w.start.year  !== undefined || w.start.month !== undefined || w.start.day !== undefined ||
-    w.end.year    !== undefined || w.end.month   !== undefined || w.end.day   !== undefined
-  );
 }
 
 const BOSSES = [
@@ -84,25 +61,10 @@ const WEEKDAYS = ['星期日', '星期一', '星期二', '星期三', '星期四
 
 function isInRealtimeWindow(date: Date): boolean {
   const nowMs = date.getTime();
-  const nowSec = date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds();
-
   return REALTIME_WINDOWS.some(w => {
-    if (hasDatePart(w)) {
-      // Full datetime comparison
-      const startMs = windowDTtoMs(w.start, date);
-      const endMs   = windowDTtoMs(w.end,   date);
-      return nowMs >= startMs && nowMs <= endMs;
-    } else {
-      // Time-only daily recurring
-      const startSec = w.start.hour * 3600 + w.start.minute * 60 + (w.start.second ?? 0);
-      const endSec   = w.end.hour   * 3600 + w.end.minute   * 60 + (w.end.second   ?? 59);
-      if (startSec <= endSec) {
-        return nowSec >= startSec && nowSec <= endSec;
-      } else {
-        // spans midnight
-        return nowSec >= startSec || nowSec <= endSec;
-      }
-    }
+    const startMs = windowDTtoMs(w.start);
+    const endMs   = windowDTtoMs(w.end);
+    return nowMs >= startMs && nowMs <= endMs;
   });
 }
 
@@ -119,36 +81,21 @@ function formatWindowDT(dt: WindowDT): string {
 }
 
 function getNextWindowChange(date: Date): { label: string; secsLeft: number } | null {
-  const nowMs  = date.getTime();
-  const nowSec = date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds();
+  const nowMs = date.getTime();
   const inWindow = isInRealtimeWindow(date);
 
   let bestDiff = Infinity;
   let bestLabel = '';
 
   for (const w of REALTIME_WINDOWS) {
-    if (hasDatePart(w)) {
-      const startMs = windowDTtoMs(w.start, date);
-      const endMs   = windowDTtoMs(w.end,   date);
-      if (inWindow) {
-        const diff = (endMs - nowMs) / 1000;
-        if (diff >= 0 && diff < bestDiff) { bestDiff = diff; bestLabel = formatWindowDT(w.end); }
-      } else {
-        const diff = (startMs - nowMs) / 1000;
-        if (diff >= 0 && diff < bestDiff) { bestDiff = diff; bestLabel = formatWindowDT(w.start); }
-      }
+    const startMs = windowDTtoMs(w.start);
+    const endMs   = windowDTtoMs(w.end);
+    if (inWindow) {
+      const diff = (endMs - nowMs) / 1000;
+      if (diff >= 0 && diff < bestDiff) { bestDiff = diff; bestLabel = formatWindowDT(w.end); }
     } else {
-      const startSec = w.start.hour * 3600 + w.start.minute * 60 + (w.start.second ?? 0);
-      const endSec   = w.end.hour   * 3600 + w.end.minute   * 60 + (w.end.second   ?? 59);
-      if (inWindow) {
-        let diff = endSec - nowSec;
-        if (diff < 0) diff += 86400;
-        if (diff < bestDiff) { bestDiff = diff; bestLabel = formatWindowDT(w.end); }
-      } else {
-        let diff = startSec - nowSec;
-        if (diff < 0) diff += 86400;
-        if (diff < bestDiff) { bestDiff = diff; bestLabel = formatWindowDT(w.start); }
-      }
+      const diff = (startMs - nowMs) / 1000;
+      if (diff >= 0 && diff < bestDiff) { bestDiff = diff; bestLabel = formatWindowDT(w.start); }
     }
   }
 
