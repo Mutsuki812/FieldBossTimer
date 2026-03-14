@@ -2,6 +2,17 @@ import { pgTable, text, serial, integer, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+export const timeList = pgTable("time_list", {
+  id: serial("id").primaryKey(),
+  week: integer("week").notNull(), // 0-6 (0 is Sunday)
+  gishikiTime: text("gishiki_time").notNull(), // "HH:MM" 可疑的儀式
+  gishiki: text("gishiki").notNull(), // 位置
+  shiraoTime: text("shirao_time").notNull(), // "HH:MM" 白青野王
+  shirao: text("shirao").notNull(), // 位置
+  sengenTime: text("sengen_time").notNull(), // "HH:MM" 仙幻島野王
+  sengen: text("sengen").notNull(), // 位置
+});
+
 export const schedules = pgTable("schedules", {
   id: serial("id").primaryKey(),
   dayOfWeek: integer("day_of_week").notNull(), // 0-6 (0 is Sunday)
@@ -29,11 +40,15 @@ export const feedbacks = pgTable("feedbacks", {
 });
 
 // Types and Schemas
+export const insertTimeListSchema = createInsertSchema(timeList).omit({ id: true });
 export const insertScheduleSchema = createInsertSchema(schedules);
 export const insertReportSchema = createInsertSchema(reports, {
   appearanceTime: z.coerce.date(),
 }).omit({ id: true, createdAt: true });
 export const insertFeedbackSchema = createInsertSchema(feedbacks).omit({ id: true, createdAt: true });
+
+export type TimeList = typeof timeList.$inferSelect;
+export type InsertTimeList = z.infer<typeof insertTimeListSchema>;
 
 export type Schedule = typeof schedules.$inferSelect;
 export type InsertSchedule = z.infer<typeof insertScheduleSchema>;

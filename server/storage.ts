@@ -1,6 +1,7 @@
 import { db } from "./db";
 import {
-  schedules, reports, feedbacks,
+  timeList, schedules, reports, feedbacks,
+  type TimeList, type InsertTimeList,
   type Schedule, type InsertSchedule,
   type Report, type InsertReport,
   type Feedback, type InsertFeedback,
@@ -9,6 +10,10 @@ import {
 import { eq, desc } from "drizzle-orm";
 
 export interface IStorage {
+  getTimeList(): Promise<TimeList[]>;
+  getTimeListByWeek(week: number): Promise<TimeList | undefined>;
+  createTimeList(data: InsertTimeList): Promise<TimeList>;
+  updateTimeList(week: number, data: Partial<Omit<TimeList, 'id'>>): Promise<TimeList | undefined>;
   getSchedules(dayOfWeek?: number): Promise<Schedule[]>;
   createSchedule(schedule: InsertSchedule): Promise<Schedule>;
   getReports(bossType?: string): Promise<Report[]>;
@@ -19,6 +24,21 @@ export interface IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
+  async getTimeList(): Promise<TimeList[]> {
+    return await db.select().from(timeList);
+  }
+  async getTimeListByWeek(week: number): Promise<TimeList | undefined> {
+    const [result] = await db.select().from(timeList).where(eq(timeList.week, week));
+    return result;
+  }
+  async createTimeList(data: InsertTimeList): Promise<TimeList> {
+    const [created] = await db.insert(timeList).values(data).returning();
+    return created;
+  }
+  async updateTimeList(week: number, data: Partial<Omit<TimeList, 'id'>>): Promise<TimeList | undefined> {
+    const [updated] = await db.update(timeList).set(data).where(eq(timeList.week, week)).returning();
+    return updated;
+  }
   async getSchedules(dayOfWeek?: number): Promise<Schedule[]> {
     if (dayOfWeek !== undefined) {
       return await db.select().from(schedules).where(eq(schedules.dayOfWeek, dayOfWeek));
