@@ -323,8 +323,8 @@ export default function Home() {
                   return (
                     <div key={boss.type} className="flex flex-col gap-4">
                       {/* Boss Block Header */}
-                      <div className={`${boss.theme} rounded-xl p-5 shadow-md`}>
-                        <h3 className="text-lg font-serif font-bold text-white">
+                      <div className={`${boss.theme} bg-card rounded-xl p-5`}>
+                        <h3 className="text-lg font-serif font-bold text-foreground">
                           {boss.name}
                         </h3>
                       </div>

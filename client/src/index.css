@@ -93,14 +93,14 @@
 }
 
 @layer utilities {
-  /* Boss Block Headers - 背景色彩 */
+  /* Boss Block Headers - 邊框 + 陰影風格 */
   .boss-card-purple {
-    @apply bg-[hsl(var(--boss-purple))] text-white border border-[hsl(var(--boss-purple))] shadow-[0_4px_20px_rgba(139,124,166,0.2)] dark:shadow-[0_4px_20px_rgba(139,124,166,0.1)];
+    @apply border-2 border-[hsl(var(--boss-purple))] shadow-[0_4px_20px_rgba(139,124,166,0.2)] dark:shadow-[0_4px_20px_rgba(139,124,166,0.1)];
   }
   .boss-card-green {
-    @apply bg-[hsl(var(--boss-green))] text-white border border-[hsl(var(--boss-green))] shadow-[0_4px_20px_rgba(124,154,130,0.2)] dark:shadow-[0_4px_20px_rgba(124,154,130,0.1)];
+    @apply border-2 border-[hsl(var(--boss-green))] shadow-[0_4px_20px_rgba(124,154,130,0.2)] dark:shadow-[0_4px_20px_rgba(124,154,130,0.1)];
   }
   .boss-card-gold {
-    @apply bg-[hsl(var(--boss-gold))] text-white border border-[hsl(var(--boss-gold))] shadow-[0_4px_20px_rgba(205,167,118,0.2)] dark:shadow-[0_4px_20px_rgba(205,167,118,0.1)];
+    @apply border-2 border-[hsl(var(--boss-gold))] shadow-[0_4px_20px_rgba(205,167,118,0.2)] dark:shadow-[0_4px_20px_rgba(205,167,118,0.1)];
   }
 }
