@@ -6,74 +6,77 @@
 
 @layer base {
   :root {
-    --background: 60 20% 98%;      /* #fbfbf9 Soft Morandi Off-White */
-    --foreground: 60 10% 20%;      /* #333330 Soft Dark */
+    /* Light Mode - 莫蘭迪柔和色系 */
+    --background: 200 8% 96%;       /* 淡灰藍 - 柔和背景 */
+    --foreground: 60 10% 18%;       /* 深灰棕 */
 
-    --card: 60 14% 96%;            /* #f7f7f4 */
-    --card-foreground: 60 10% 20%;
+    --card: 0 0% 98%;               /* 極淡白 */
+    --card-foreground: 60 10% 18%;
 
-    --popover: 60 20% 98%;
-    --popover-foreground: 60 10% 20%;
+    --popover: 200 8% 96%;
+    --popover-foreground: 60 10% 18%;
 
-    --primary: 180 6% 45%;         /* Muted Slate/Sage */
+    --primary: 180 6% 45%;          /* 霧灰藍 */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 40 14% 90%;       /* Sand */
-    --secondary-foreground: 60 10% 20%;
+    --secondary: 40 14% 88%;        /* 沙色 */
+    --secondary-foreground: 60 10% 18%;
 
-    --muted: 60 10% 90%;
-    --muted-foreground: 60 5% 45%;
+    --muted: 60 10% 88%;            /* 霧感灰 */
+    --muted-foreground: 60 5% 48%;
 
-    --accent: 40 14% 90%;
-    --accent-foreground: 60 10% 20%;
+    --accent: 40 14% 88%;
+    --accent-foreground: 60 10% 18%;
 
     --destructive: 0 40% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 60 10% 85%;
-    --input: 60 10% 85%;
+    --border: 60 10% 82%;
+    --input: 60 10% 82%;
     --ring: 180 6% 45%;
 
     --radius: 0.4rem;
 
-    /* Boss Colors (Morandi/Muted) */
-    --boss-purple: 260 20% 65%;
-    --boss-green: 140 20% 55%;
-    --boss-gold: 40 40% 60%;
+    /* Boss Colors - 鮮明莫蘭迪色系 */
+    --boss-purple: 260 30% 60%;     /* 可疑的儀式 - 柔紫 */
+    --boss-green: 140 30% 50%;      /* 白青野王 - 柔綠 */
+    --boss-gold: 40 50% 55%;        /* 仙幻島野王 - 柔金 */
   }
 
   .dark {
-    --background: 60 6% 12%;       /* #20201e Japanese Dark Brown/Grey */
-    --foreground: 60 10% 90%;      /* #e6e6e3 */
+    /* Dark Mode - 日系深色柔和色系 */
+    --background: 240 10% 10%;      /* 深藍灰（非純黑）- 日系風格 */
+    --foreground: 200 8% 85%;       /* 淡灰藍白 */
 
-    --card: 60 6% 15%;             /* #262624 */
-    --card-foreground: 60 10% 90%;
+    --card: 240 10% 14%;            /* 深藍灰卡片 */
+    --card-foreground: 200 8% 85%;
 
-    --popover: 60 6% 12%;
-    --popover-foreground: 60 10% 90%;
+    --popover: 240 10% 10%;
+    --popover-foreground: 200 8% 85%;
 
-    --primary: 180 6% 55%;
-    --primary-foreground: 60 6% 12%;
+    --primary: 180 6% 55%;          /* 霧灰藍 */
+    --primary-foreground: 240 10% 10%;
 
-    --secondary: 60 6% 20%;
-    --secondary-foreground: 60 10% 90%;
+    --secondary: 60 6% 22%;         /* 深灰 */
+    --secondary-foreground: 200 8% 85%;
 
-    --muted: 60 6% 20%;
-    --muted-foreground: 60 5% 65%;
+    --muted: 60 6% 22%;             /* 深灰 */
+    --muted-foreground: 200 8% 70%;
 
-    --accent: 60 6% 20%;
-    --accent-foreground: 60 10% 90%;
+    --accent: 60 6% 22%;
+    --accent-foreground: 200 8% 85%;
 
     --destructive: 0 40% 40%;
-    --destructive-foreground: 60 10% 90%;
+    --destructive-foreground: 200 8% 85%;
 
-    --border: 60 6% 25%;
-    --input: 60 6% 25%;
+    --border: 240 10% 22%;
+    --input: 240 10% 22%;
     --ring: 180 6% 55%;
 
-    --boss-purple: 260 20% 50%;
-    --boss-green: 140 20% 40%;
-    --boss-gold: 40 40% 45%;
+    /* Boss Colors - Dark mode */
+    --boss-purple: 260 30% 55%;     /* 可疑的儀式 - 柔紫 */
+    --boss-green: 140 30% 45%;      /* 白青野王 - 柔綠 */
+    --boss-gold: 40 50% 50%;        /* 仙幻島野王 - 柔金 */
   }
 
   body {
@@ -90,13 +93,14 @@
 }
 
 @layer utilities {
+  /* Boss Block Headers - 背景色彩 */
   .boss-card-purple {
-    @apply border-[hsl(var(--boss-purple))] shadow-[0_4px_20px_rgba(139,124,166,0.15)] dark:shadow-[0_4px_20px_rgba(139,124,166,0.05)];
+    @apply bg-[hsl(var(--boss-purple))] text-white border border-[hsl(var(--boss-purple))] shadow-[0_4px_20px_rgba(139,124,166,0.2)] dark:shadow-[0_4px_20px_rgba(139,124,166,0.1)];
   }
   .boss-card-green {
-    @apply border-[hsl(var(--boss-green))] shadow-[0_4px_20px_rgba(124,154,130,0.15)] dark:shadow-[0_4px_20px_rgba(124,154,130,0.05)];
+    @apply bg-[hsl(var(--boss-green))] text-white border border-[hsl(var(--boss-green))] shadow-[0_4px_20px_rgba(124,154,130,0.2)] dark:shadow-[0_4px_20px_rgba(124,154,130,0.1)];
   }
   .boss-card-gold {
-    @apply border-[hsl(var(--boss-gold))] shadow-[0_4px_20px_rgba(205,167,118,0.15)] dark:shadow-[0_4px_20px_rgba(205,167,118,0.05)];
+    @apply bg-[hsl(var(--boss-gold))] text-white border border-[hsl(var(--boss-gold))] shadow-[0_4px_20px_rgba(205,167,118,0.2)] dark:shadow-[0_4px_20px_rgba(205,167,118,0.1)];
   }
 }
