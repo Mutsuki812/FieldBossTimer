@@ -321,16 +321,14 @@ export default function Home() {
                   const data = schedulesByBoss[boss.type];
                   const isExpanded = expandedBoss[boss.type] ?? false;
                   return (
-                    <div key={boss.type} className="flex flex-col gap-4">
-                      {/* Boss Block Header */}
-                      <div className={`${boss.theme} bg-card rounded-xl p-5`}>
-                        <h3 className="text-lg font-serif font-bold text-foreground">
-                          {boss.name}
-                        </h3>
-                      </div>
+                    <div key={boss.type} className={`${boss.theme} bg-card rounded-2xl p-6 shadow-sm`}>
+                      {/* Boss Name */}
+                      <h3 className="text-xl font-serif font-bold text-foreground mb-5">
+                        {boss.name}
+                      </h3>
 
-                      {/* Current Hour */}
-                      <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
+                      {/* Current Hour Section */}
+                      <div className="mb-5 pb-5 border-b border-border/50">
                         <h4 className="text-sm font-semibold text-foreground/80 mb-3 flex items-center gap-2">
                           <span className="relative flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-50"></span>
@@ -347,9 +345,9 @@ export default function Home() {
                             data.cur.map((s) => (
                               <div
                                 key={s.id}
-                                className="flex items-center justify-between p-2.5 bg-background rounded border border-border/60 text-sm"
+                                className="flex items-center justify-between p-2.5 bg-background/50 rounded border border-border/40 text-sm"
                               >
-                                <span className="font-mono font-bold">{s.appearanceTime}</span>
+                                <span className="font-mono font-bold text-foreground">{s.appearanceTime}</span>
                                 <span className="text-xs text-muted-foreground flex items-center gap-1">
                                   <MapPin className="w-3 h-3" /> {s.location}
                                 </span>
@@ -359,8 +357,8 @@ export default function Home() {
                         </div>
                       </div>
 
-                      {/* Next 2 Hours */}
-                      <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
+                      {/* Next 2 Hours Section */}
+                      <div className="mb-5 pb-5 border-b border-border/50">
                         <h4 className="text-sm font-semibold text-foreground/80 mb-3">
                           後兩小時
                         </h4>
@@ -373,7 +371,7 @@ export default function Home() {
                             data.next.map((s) => (
                               <div
                                 key={s.id}
-                                className="flex items-center justify-between p-2.5 bg-background rounded border border-border/60 text-sm"
+                                className="flex items-center justify-between p-2.5 bg-background/50 rounded border border-border/40 text-sm"
                               >
                                 <span className="font-mono text-xs text-muted-foreground">
                                   {s.appearanceTime}
@@ -387,8 +385,8 @@ export default function Home() {
                         </div>
                       </div>
 
-                      {/* Other Times */}
-                      <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
+                      {/* Other Times Section */}
+                      <div>
                         <Button
                           variant="outline"
                           size="sm"
